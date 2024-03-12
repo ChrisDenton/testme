@@ -1,0 +1,57 @@
+name: Build
+permissions:
+  contents: read
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  CARGO_INCREMENTAL: 0
+  CARGO_PROFILE_DEV_DEBUG: 0
+  CARGO_TERM_COLOR: always
+  CHEZMOI_MODIFY_MANAGER_BUILDER: github-ci
+  RUST_BACKTRACE: 1
+  RUSTFLAGS: "-D warnings"
+  RUSTUP_MAX_RETRIES: 10
+
+jobs:
+ exotic-os:
+    # Test native builds on non-Linux platforms
+    name: "Test: ${{ matrix.target }} on ${{ matrix.os }} with ${{ matrix.rust }}"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+            suffix: .exe
+            debug-suffix: .pdb
+            rust: stable
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+            suffix: .exe
+            debug-suffix: .pdb
+            rust: nightly
+          - target: x86_64-pc-windows-gnu
+            os: windows-latest
+            suffix: .exe
+            debug-suffix: .pdb
+            rust: stable
+          - target: x86_64-pc-windows-gnu
+            os: windows-latest
+            suffix: .exe
+            debug-suffix: .pdb
+            rust: nightly
+    steps:
+      - uses: actions/checkout@v4
+      - name: Environment info
+        run: |
+          echo "rustup --version:"; rustup --version
+          echo "rustup show:"; rustup show
+      - name: Install Rust
+        run: rustup install --profile minimal ${{ matrix.rust }} && rustup default ${{ matrix.rust }} && rustup target add ${{ matrix.target }}
+
