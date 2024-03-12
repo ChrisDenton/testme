@@ -26,22 +26,22 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - target: x86_64-pc-windows-msvc
+          - target: x86_64-pc-windows-gnu
             os: windows-latest
             suffix: .exe
             debug-suffix: .pdb
             rust: stable
-          - target: x86_64-pc-windows-msvc
+          - target: x86_64-pc-windows-gnu
             os: windows-latest
             suffix: .exe
             debug-suffix: .pdb
             rust: nightly
-          - target: x86_64-pc-windows-gnu
+          - target: x86_64-pc-windows-msvc
             os: windows-latest
             suffix: .exe
             debug-suffix: .pdb
             rust: stable
-          - target: x86_64-pc-windows-gnu
+          - target: x86_64-pc-windows-msvc
             os: windows-latest
             suffix: .exe
             debug-suffix: .pdb
