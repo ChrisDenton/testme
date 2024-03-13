@@ -43,12 +43,6 @@ jobs:
         run: |
           echo "rustup --version:"; rustup --version
           echo "rustup show:"; rustup show
-      - name: Test Path
-        run: |
-          if (Test-Path ~/.cargo/bin/THIS_DOES_NOT_EXIST) {
-              echo "THIS_DOES_NOT_EXIST does exist"
-          }
-          '' > ~/.cargo/bin/THIS_DOES_NOT_EXIST
       - name: Install Rust
         run: rustup install --profile minimal ${{ matrix.rust }} && rustup default ${{ matrix.rust }} && rustup target add ${{ matrix.target }}
 
