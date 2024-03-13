@@ -21,7 +21,17 @@ jobs:
             os: windows-latest
             suffix: .exe
             debug-suffix: .pdb
+            rust: stable
+          - target: x86_64-pc-windows-gnu
+            os: windows-latest
+            suffix: .exe
+            debug-suffix: .pdb
             rust: nightly
+          - target: x86_64-pc-windows-msvc
+            os: windows-latest
+            suffix: .exe
+            debug-suffix: .pdb
+            rust: stable
           - target: x86_64-pc-windows-msvc
             os: windows-latest
             suffix: .exe
@@ -33,6 +43,12 @@ jobs:
         run: |
           echo "rustup --version:"; rustup --version
           echo "rustup show:"; rustup show
+      - name: Test Path
+        run: |
+          if (Test-Path ~/.cargo/bin/THIS_DOES_NOT_EXIST) {
+              echo "THIS_DOES_NOT_EXIST does exist"
+          }
+          '' > ~/.cargo/bin/THIS_DOES_NOT_EXIST
       - name: Install Rust
         run: rustup install --profile minimal ${{ matrix.rust }} && rustup default ${{ matrix.rust }} && rustup target add ${{ matrix.target }}
 
