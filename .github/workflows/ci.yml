@@ -1,12 +1,21 @@
 name: Build
+permissions:
+  contents: read
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
-permissions:
-  contents: read
+
+env:
+  CARGO_INCREMENTAL: 0
+  CARGO_PROFILE_DEV_DEBUG: 0
+  CARGO_TERM_COLOR: always
+  CHEZMOI_MODIFY_MANAGER_BUILDER: github-ci
+  RUST_BACKTRACE: 1
+  RUSTFLAGS: "-D warnings"
+  RUSTUP_MAX_RETRIES: 10
 
 jobs:
  exotic-os:
@@ -17,22 +26,22 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - target: x86_64-pc-windows-gnu
+          - target: x86_64-pc-windows-msvc
             os: windows-latest
             suffix: .exe
             debug-suffix: .pdb
             rust: stable
-          - target: x86_64-pc-windows-gnu
+          - target: x86_64-pc-windows-msvc
             os: windows-latest
             suffix: .exe
             debug-suffix: .pdb
             rust: nightly
-          - target: x86_64-pc-windows-msvc
+          - target: x86_64-pc-windows-gnu
             os: windows-latest
             suffix: .exe
             debug-suffix: .pdb
             rust: stable
-          - target: x86_64-pc-windows-msvc
+          - target: x86_64-pc-windows-gnu
             os: windows-latest
             suffix: .exe
             debug-suffix: .pdb
@@ -45,4 +54,3 @@ jobs:
           echo "rustup show:"; rustup show
       - name: Install Rust
         run: rustup install --profile minimal ${{ matrix.rust }} && rustup default ${{ matrix.rust }} && rustup target add ${{ matrix.target }}
-
